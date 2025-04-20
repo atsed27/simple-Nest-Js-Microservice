@@ -1,26 +1,22 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto, User } from '@app/shared';
+import { users } from '@app/shared/schema/user.schema';
+import { Inject, Injectable } from '@nestjs/common';
+import { DRIZZLE } from 'libs/shared/database/database.module';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
-  }
+  constructor(@Inject(DRIZZLE) private db) {}
 
-  findAll() {
-    return `This action returns all users`;
-  }
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    console.log('Create User DTO:', createUserDto);
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+    const user = await this.db
+      .insert(users)
+      .values({
+        ...createUserDto,
+      })
+      .returning();
+    console.log('usre', user);
+    return user;
   }
 }
