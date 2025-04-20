@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserServiceController } from './user-service.controller';
-import { UserServiceService } from './user-service.service';
+import { UserServiceController } from './user_service.controller';
+import { UserServiceService } from './user_service.service';
 
 describe('UserServiceController', () => {
   let userServiceController: UserServiceController;
@@ -11,7 +11,9 @@ describe('UserServiceController', () => {
       providers: [UserServiceService],
     }).compile();
 
-    userServiceController = app.get<UserServiceController>(UserServiceController);
+    userServiceController = app.get<UserServiceController>(
+      UserServiceController,
+    );
   });
 
   describe('root', () => {

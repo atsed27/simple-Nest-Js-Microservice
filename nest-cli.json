@@ -1,7 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "apps/apigetway/src",
+  "sourceRoot": "./",
+  "entryFile": "src/main",
   "compilerOptions": {
     "deleteOutDir": true,
     "webpack": true,
@@ -13,19 +14,32 @@
     "apigetway": {
       "type": "application",
       "root": "apps/apigetway",
-      "entryFile": "main",
-      "sourceRoot": "apps/apigetway/src",
+      "entryFile": "src/main",
+      "sourceRoot": "./",
       "compilerOptions": {
-        "tsConfigPath": "apps/apigetway/tsconfig.app.json"
+        "tsConfigPath": "apps/apigetway/tsconfig.app.json",
+        "assets": ["proto/*.proto"],
+        "watchAssets": true
       }
     },
-    "user-service": {
+    "user_service": {
       "type": "application",
-      "root": "apps/user-service",
-      "entryFile": "main",
-      "sourceRoot": "apps/user-service/src",
+      "root": "apps/user_service",
+      "entryFile": "src/main",
+      "sourceRoot": "./",
       "compilerOptions": {
-        "tsConfigPath": "apps/user-service/tsconfig.app.json"
+        "tsConfigPath": "apps/user_service/tsconfig.app.json",
+        "assets": ["proto/*.proto"],
+        "watchAssets": true
+      }
+    },
+    "shared": {
+      "type": "library",
+      "root": "libs/shared",
+      "entryFile": "index",
+      "sourceRoot": "libs/shared/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/shared/tsconfig.lib.json"
       }
     }
   }
