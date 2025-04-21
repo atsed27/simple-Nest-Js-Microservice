@@ -1,10 +1,20 @@
-import { CreateUserDto, SignInDto, SignInResponse, User } from '@app/shared';
+import {
+  CreateUserDto,
+  FindOneUserDto,
+  Orders,
+  SignInDto,
+  SignInResponse,
+  User,
+} from '@app/shared';
 import { users } from '@app/shared/schema/user.schema';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { DRIZZLE } from 'libs/shared/database/database.module';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { eq } from 'drizzle-orm';
+import { orders } from '@app/shared/schema/orders.schema';
+import { RpcException } from '@nestjs/microservices';
+import { status } from '@grpc/grpc-js';
 const access_token_expire = 60 * 15; //15
 @Injectable()
 export class UsersService {
@@ -14,8 +24,6 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    console.log('Create User DTO:', createUserDto);
-
     const user = await this.db
       .insert(users)
       .values({
@@ -26,7 +34,8 @@ export class UsersService {
         ),
       })
       .returning();
-    return user;
+    const { password, ...userWithoutPassword } = user[0];
+    return userWithoutPassword;
   }
 
   async signIn(signInDto: SignInDto): Promise<SignInResponse> {
@@ -54,6 +63,24 @@ export class UsersService {
       user: safeUser,
       accessToken,
       expiresIn: access_token_expire.toString(),
+    };
+  }
+
+  async findUserOrder({ id }: FindOneUserDto): Promise<Orders> {
+    const user = await this.db.select().from(users).where(eq(users.id, id));
+    if (user.length === 0) {
+      throw new RpcException({
+        code: status.NOT_FOUND,
+        message: 'User Is Not Found',
+      });
+    }
+    const result = await this.db
+      .select()
+      .from(orders)
+      .where(eq(orders.userId, id));
+
+    return {
+      orders: result,
     };
   }
 }

@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { GrpcMethod, MessagePattern, Payload } from '@nestjs/microservices';
 import { UsersService } from './users.service';
-import { CreateUserDto, SignInDto } from '@app/shared';
+import { CreateUserDto, FindOneUserDto, SignInDto } from '@app/shared';
 
 @Controller()
 //@UserServiceControllerMethods()
@@ -16,5 +16,10 @@ export class UsersController {
   @GrpcMethod('UserService', 'SignIn')
   signIn(signInDto: SignInDto) {
     return this.usersService.signIn(signInDto);
+  }
+
+  @GrpcMethod('UserService', 'ListUserOrders')
+  findUserOrder(id: FindOneUserDto) {
+    return this.usersService.findUserOrder(id);
   }
 }

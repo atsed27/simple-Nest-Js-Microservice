@@ -11,9 +11,9 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from '@app/shared';
 import { validateOrReject } from 'class-validator';
 import { ValidatedCreateUserDto } from '@app/shared/dto/user/createUser';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Public } from '@app/shared/decorators/auth.decorator';
-import { SignInDto } from '@app/shared/user-service';
+import { FindOneUserDto, SignInDto } from '@app/shared/user-service';
 
 @ApiTags('users')
 @Controller('users')
@@ -38,5 +38,12 @@ export class UsersController {
   async signIn(@Body() signInDto: SignInDto) {
     console.log('sign');
     return this.usersService.signIn(signInDto);
+  }
+
+  @Get('orders/:id')
+  @Public()
+  @ApiParam({ name: 'id', type: String, description: 'User ID' })
+  async getOrder(@Param() id: FindOneUserDto) {
+    return this.usersService.getOrder(id);
   }
 }

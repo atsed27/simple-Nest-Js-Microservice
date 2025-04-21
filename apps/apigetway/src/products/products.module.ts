@@ -22,6 +22,7 @@ import {
         options: {
           package: PRODUCT_SERVICE_PACKAGE_NAME,
           protoPath: join(__dirname, '../product-service.proto'),
+          url: '0.0.0.0:5000',
         },
       },
     ]),
