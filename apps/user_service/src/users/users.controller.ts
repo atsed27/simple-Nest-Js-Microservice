@@ -1,14 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { GrpcMethod, MessagePattern, Payload } from '@nestjs/microservices';
 import { UsersService } from './users.service';
-import {
-  UserServiceController,
-  CreateUserDto,
-  UpdateUserDto,
-  FindOneUserDto,
-  UserServiceControllerMethods,
-  SignInDto,
-} from '@app/shared';
+import { CreateUserDto, SignInDto } from '@app/shared';
 
 @Controller()
 //@UserServiceControllerMethods()

@@ -33,6 +33,7 @@ export class UsersController {
   }
 
   @Post('signIn')
+  @Public()
   @ApiBody({ type: ValidatedCreateUserDto })
   async signIn(@Body() signInDto: SignInDto) {
     console.log('sign');

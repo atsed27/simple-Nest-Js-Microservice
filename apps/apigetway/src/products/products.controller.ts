@@ -1,34 +1,72 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ValidatedCreateProductsDto } from '@app/shared/dto/products/createProduct';
+import {
+  CreateProductDto,
+  ListProductsDto,
+  UpdateProductDto,
+} from '@app/shared/product-service';
+import { Public } from '@app/shared/decorators/auth.decorator';
+import { ValidatedUpdateProductsDto } from '@app/shared/dto/products/updateProduct';
+import { validateOrReject } from 'class-validator';
 
+@ApiTags('products')
 @Controller('products')
+@Public()
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post()
-  create(@Body() createProductDto: CreateProductDto) {
+  @ApiBody({ type: ValidatedCreateProductsDto })
+  async create(@Body() createProductDto: CreateProductDto) {
+    const validated = Object.assign(
+      new ValidatedCreateProductsDto(),
+      createProductDto,
+    );
+    await validateOrReject(validated);
     return this.productsService.create(createProductDto);
   }
 
   @Get()
-  findAll() {
-    return this.productsService.findAll();
+  @ApiQuery({ name: 'category', required: false, type: String })
+  @ApiQuery({ name: 'minPrice', required: false, type: Number })
+  @ApiQuery({ name: 'maxPrice', required: false, type: Number })
+  @ApiQuery({ name: 'availability', required: false, type: Boolean })
+  async ListAllProduct(@Query() query: ListProductsDto) {
+    console.log('query', query);
+
+    return this.productsService.ListAllProduct(query);
   }
 
   @Get(':id')
+  @ApiParam({ name: 'id', type: String, description: 'Product ID' })
   findOne(@Param('id') id: string) {
-    return this.productsService.findOne(+id);
+    return this.productsService.findOneProduct(id);
   }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productsService.update(+id, updateProductDto);
+  @Patch()
+  @ApiBody({ type: ValidatedUpdateProductsDto })
+  async updateProduct(@Body() updateProductDto: UpdateProductDto) {
+    const validated = Object.assign(
+      new ValidatedCreateProductsDto(),
+      updateProductDto,
+    );
+    await validateOrReject(validated);
+    return this.productsService.updateProduct(updateProductDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productsService.remove(+id);
+  @ApiParam({ name: 'id', type: String, description: 'Product ID' })
+  delete(@Param('id') id: string) {
+    return this.productsService.delete(id);
   }
 }

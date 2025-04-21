@@ -18,6 +18,7 @@ import { JwtModule } from '@nestjs/jwt';
         options: {
           package: USER_SERVICE_PACKAGE_NAME,
           protoPath: join(__dirname, '../user-service.proto'),
+          url: 'localhost:5001',
         },
       },
     ]),

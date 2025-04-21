@@ -1,26 +1,75 @@
-import { Injectable } from '@nestjs/common';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import {
+  CreateProductDto,
+  ListProductsDto,
+  PRODUCT_SERVICE_NAME,
+  ProductServiceClient,
+  UpdateProductDto,
+} from '@app/shared/product-service';
+import { status } from '@grpc/grpc-js';
+import {
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  OnModuleInit,
+} from '@nestjs/common';
+import { ClientGrpc } from '@nestjs/microservices';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable()
-export class ProductsService {
+export class ProductsService implements OnModuleInit {
+  private productService: ProductServiceClient;
+
+  constructor(@Inject(PRODUCT_SERVICE_NAME) private client: ClientGrpc) {}
+
+  onModuleInit() {
+    this.productService =
+      this.client.getService<ProductServiceClient>(PRODUCT_SERVICE_NAME);
+  }
+
   create(createProductDto: CreateProductDto) {
-    return 'This action adds a new product';
+    return this.productService.createProduct(createProductDto);
   }
 
-  findAll() {
-    return `This action returns all products`;
+  async findOneProduct(id: string) {
+    try {
+      return await lastValueFrom(this.productService.getOneProduct({ id }));
+    } catch (err) {
+      if (err.code === status.NOT_FOUND) {
+        throw new NotFoundException('Product Is Not Found');
+      }
+
+      throw new InternalServerErrorException('Something went wrong');
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async updateProduct(updateProductdto: UpdateProductDto) {
+    try {
+      return await lastValueFrom(
+        this.productService.updateProduct(updateProductdto),
+      );
+    } catch (err) {
+      if (err.code === status.NOT_FOUND) {
+        throw new NotFoundException('Product Is Not Found');
+      }
+
+      throw new InternalServerErrorException('Something went wrong');
+    }
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async ListAllProduct(query: ListProductsDto) {
+    return this.productService.listProducts(query);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async delete(id: string) {
+    try {
+      return await lastValueFrom(this.productService.deleteProduct({ id }));
+    } catch (err) {
+      if (err.code === status.NOT_FOUND) {
+        throw new NotFoundException('Product Is Not Found');
+      }
+
+      throw new InternalServerErrorException('Something went wrong');
+    }
   }
 }
