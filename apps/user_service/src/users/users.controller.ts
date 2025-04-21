@@ -7,6 +7,7 @@ import {
   UpdateUserDto,
   FindOneUserDto,
   UserServiceControllerMethods,
+  SignInDto,
 } from '@app/shared';
 
 @Controller()
@@ -17,5 +18,10 @@ export class UsersController {
   @GrpcMethod('UserService', 'CreateUser')
   createUser(CreateUserDto: CreateUserDto) {
     return this.usersService.create(CreateUserDto);
+  }
+
+  @GrpcMethod('UserService', 'SignIn')
+  signIn(signInDto: SignInDto) {
+    return this.usersService.signIn(signInDto);
   }
 }

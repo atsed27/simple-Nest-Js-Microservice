@@ -12,13 +12,16 @@ import { CreateUserDto } from '@app/shared';
 import { validateOrReject } from 'class-validator';
 import { ValidatedCreateUserDto } from '@app/shared/dto/user/createUser';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { Public } from '@app/shared/decorators/auth.decorator';
+import { SignInDto } from '@app/shared/user-service';
 
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
+  @Post('signUp')
+  @Public()
   @ApiBody({ type: ValidatedCreateUserDto })
   async create(@Body() createUserDto: CreateUserDto) {
     const validated = Object.assign(
@@ -27,5 +30,12 @@ export class UsersController {
     );
     await validateOrReject(validated);
     return this.usersService.create(createUserDto);
+  }
+
+  @Post('signIn')
+  @ApiBody({ type: ValidatedCreateUserDto })
+  async signIn(@Body() signInDto: SignInDto) {
+    console.log('sign');
+    return this.usersService.signIn(signInDto);
   }
 }

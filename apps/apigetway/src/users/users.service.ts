@@ -2,6 +2,7 @@ import {
   CreateUserDto,
   UserServiceClient,
   USER_SERVICE_NAME,
+  SignInDto,
 } from '@app/shared';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
@@ -19,5 +20,9 @@ export class UsersService implements OnModuleInit {
 
   create(createUserDto: CreateUserDto) {
     return this.userService.createUser(createUserDto);
+  }
+
+  signIn(signInDto: SignInDto) {
+    return this.userService.signIn(signInDto);
   }
 }
