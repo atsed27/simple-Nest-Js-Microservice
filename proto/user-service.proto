@@ -13,10 +13,14 @@ message UpdateUserDto {
 }
 
 message CreateUserDto {
-  
-  string username = 2;
-  string password = 3;
-  string fullName = 4;
+  string username = 1;
+  string password = 2;
+  string fullName = 3;
+}
+
+message SignInDto {
+  string username = 1;
+  string password = 2;
 }
 
 message User {
@@ -30,10 +34,13 @@ message Users {
   repeated User users = 1;
 }
 
+message SignInResponse {
+  User user = 1;
+  string access_token = 2;
+  string expires_in = 3; 
+}
+
 service UserService {
   rpc CreateUser (CreateUserDto) returns (User) {}
-  rpc FindAllUsers (Empty) returns (Users) {}
-  rpc FindOneUser (FindOneUserDto) returns (User) {}
-  rpc UpdateUser (UpdateUserDto) returns (User) {}
-  rpc RemoveUser (FindOneUserDto) returns (User) {}
+  rpc SignIn (SignInDto) returns (SignInResponse) {}
 }

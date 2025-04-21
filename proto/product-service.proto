@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package  product_service;
+
+service ProductService {
+  rpc CreateProduct (CreateProductDto) returns (ProductDto);
+  rpc GetOneProduct (FindOneProductDto) returns (ProductDto);
+  rpc UpdateProduct (UpdateProductDto) returns (ProductDto);
+  rpc DeleteProduct (DeleteProductDto) returns (Empty);
+  rpc ListProducts (ListProductsDto) returns (ProductListDto);
+}
+
+message CreateProductDto {
+  string name = 1;
+  string description = 2;
+  double price = 3;
+  bool availability = 4;
+  string category = 5;
+}
+
+message UpdateProductDto {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  double price = 4;
+  bool availability = 5;
+  string category = 6;
+}
+
+message FindOneProductDto {
+  string id = 1;
+}
+
+message DeleteProductDto {
+  string id = 1;
+}
+
+message ProductDto {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  double price = 4;
+  bool availability = 5;
+  string category = 6;
+}
+
+message ProductListDto {
+  repeated ProductDto products = 1;
+}
+
+message ListProductsDto {
+  string category = 1;   
+  double minPrice = 2;   
+  double maxPrice = 3;   
+  bool availability = 4; 
+}
+
+message Empty {}

@@ -27,6 +27,11 @@ export interface CreateUserDto {
   fullName: string;
 }
 
+export interface SignInDto {
+  username: string;
+  password: string;
+}
+
 export interface User {
   id: string;
   username: string;
@@ -38,35 +43,29 @@ export interface Users {
   users: User[];
 }
 
+export interface SignInResponse {
+  user: User | undefined;
+  accessToken: string;
+  expiresIn: string;
+}
+
 export const USER_SERVICE_PACKAGE_NAME = "user_service";
 
 export interface UserServiceClient {
   createUser(request: CreateUserDto): Observable<User>;
 
-  findAllUsers(request: Empty): Observable<Users>;
-
-  findOneUser(request: FindOneUserDto): Observable<User>;
-
-  updateUser(request: UpdateUserDto): Observable<User>;
-
-  removeUser(request: FindOneUserDto): Observable<User>;
+  signIn(request: SignInDto): Observable<SignInResponse>;
 }
 
 export interface UserServiceController {
   createUser(request: CreateUserDto): Promise<User> | Observable<User> | User;
 
-  findAllUsers(request: Empty): Promise<Users> | Observable<Users> | Users;
-
-  findOneUser(request: FindOneUserDto): Promise<User> | Observable<User> | User;
-
-  updateUser(request: UpdateUserDto): Promise<User> | Observable<User> | User;
-
-  removeUser(request: FindOneUserDto): Promise<User> | Observable<User> | User;
+  signIn(request: SignInDto): Promise<SignInResponse> | Observable<SignInResponse> | SignInResponse;
 }
 
 export function UserServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["createUser", "findAllUsers", "findOneUser", "updateUser", "removeUser"];
+    const grpcMethods: string[] = ["createUser", "signIn"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("UserService", method)(constructor.prototype[method], method, descriptor);

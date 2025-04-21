@@ -41,6 +41,17 @@
       "compilerOptions": {
         "tsConfigPath": "libs/shared/tsconfig.lib.json"
       }
+    },
+    "product_service": {
+      "type": "application",
+      "root": "apps/product_service",
+      "entryFile": "src/main",
+      "sourceRoot": "./",
+      "compilerOptions": {
+        "tsConfigPath": "apps/product_service/tsconfig.app.json",
+        "assets": ["proto/*.proto"],
+        "watchAssets": true
+      }
     }
   }
 }
