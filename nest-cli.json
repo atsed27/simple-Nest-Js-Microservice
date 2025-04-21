@@ -52,6 +52,17 @@
         "assets": ["proto/*.proto"],
         "watchAssets": true
       }
+    },
+    "order_service": {
+      "type": "application",
+      "root": "apps/order_service",
+      "entryFile": "src/main",
+      "sourceRoot": "./",
+      "compilerOptions": {
+        "tsConfigPath": "apps/order_service/tsconfig.app.json",
+        "assets": ["proto/*.proto"],
+        "watchAssets": true
+      }
     }
   }
 }
