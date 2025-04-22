@@ -36,16 +36,16 @@ export class ProductsController {
     await validateOrReject(validated);
     return this.productsService.create(createProductDto);
   }
-
+  
   @Get()
   @ApiQuery({ name: 'category', required: false, type: String })
   @ApiQuery({ name: 'minPrice', required: false, type: Number })
   @ApiQuery({ name: 'maxPrice', required: false, type: Number })
   @ApiQuery({ name: 'availability', required: false, type: Boolean })
   async ListAllProduct(@Query() query: ListProductsDto) {
-    console.log('query', query);
-
-    return this.productsService.ListAllProduct(query);
+    console.log('query1', query);
+     const queryParams={...query,availability:query.availability.toString()==="false"?false:true}
+    return this.productsService.ListAllProduct(queryParams);
   }
 
   @Get(':id')

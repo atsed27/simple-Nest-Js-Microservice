@@ -14,6 +14,7 @@ import { ValidatedCreateUserDto } from '@app/shared/dto/user/createUser';
 import { ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Public } from '@app/shared/decorators/auth.decorator';
 import { FindOneUserDto, SignInDto } from '@app/shared/user-service';
+import { ValidatedSignIn } from '@app/shared/dto/user/signIn';
 
 @ApiTags('users')
 @Controller('users')
@@ -34,7 +35,7 @@ export class UsersController {
 
   @Post('signIn')
   @Public()
-  @ApiBody({ type: ValidatedCreateUserDto })
+  @ApiBody({ type: ValidatedSignIn})
   async signIn(@Body() signInDto: SignInDto) {
     console.log('sign');
     return this.usersService.signIn(signInDto);

@@ -15,6 +15,7 @@ import { eq } from 'drizzle-orm';
 import { orders } from '@app/shared/schema/orders.schema';
 import { RpcException } from '@nestjs/microservices';
 import { status } from '@grpc/grpc-js';
+import { console } from 'inspector';
 const access_token_expire = 60 * 15; //15
 @Injectable()
 export class UsersService {
@@ -24,6 +25,8 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
+
+    console.log('createUserDto', createUserDto);
     const user = await this.db
       .insert(users)
       .values({

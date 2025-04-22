@@ -8,8 +8,11 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 
-RUN npm install --legacy-peer-deps
+RUN npm install --force
 
+RUN npm install @nestjs/config --force
+
+RUN  npm install class-validator --force
 
 COPY apps/order_service ./apps/order_service
 
