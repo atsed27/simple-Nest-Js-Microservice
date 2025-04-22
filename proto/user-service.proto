@@ -37,10 +37,23 @@ message Users {
 message SignInResponse {
   User user = 1;
   string access_token = 2;
-  string expires_in = 3; 
+  string expires_in = 3;
+}
+
+message Order {
+  string id = 1;
+  string userId = 2;
+  string productId = 3;
+  int32 quantity = 4;
+  double totalPrice = 5;
+}
+
+message Orders {
+  repeated Order orders = 1;
 }
 
 service UserService {
   rpc CreateUser (CreateUserDto) returns (User) {}
   rpc SignIn (SignInDto) returns (SignInResponse) {}
+  rpc ListUserOrders (FindOneUserDto) returns (Orders) {}
 }
